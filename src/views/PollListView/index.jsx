@@ -3,12 +3,8 @@ import React, { Component } from 'react';
 import PollListItem from '../../components/PollListItem';
 
 class PollListView extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      pollList: null,
-    }
+  state = {
+    pollList: null,
   }
   componentDidMount() {
     this.fetchPolls();
@@ -24,13 +20,9 @@ class PollListView extends Component {
             console.log(data);
             this.setState({ pollList: data });
           })
-          .catch(err => {
-            console.error(err);
-          });
+          .catch(err => console.error(err));
       })
-      .catch(err => {
-        console.error(err);
-      });
+      .catch(err => console.error(err));
   }
 
   render() {
