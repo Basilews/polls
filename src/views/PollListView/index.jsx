@@ -21,7 +21,7 @@ class PollListView extends Component {
       .then(resp => {
         resp.json()
           .then(data => {
-            this.setState({ pollList: data });
+            this.setState({ pollList: data.reverse() });
           })
           .catch(err => console.error(err));
       })

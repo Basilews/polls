@@ -5,9 +5,9 @@ import calculatePercentage from '../../utils/calculatePercentage';
 import styles from './ChoiceItem.module.css';
 
 
-function ChoiceItem({ choice, rootVotes, isLast }) {
+function ChoiceItem({ choice, rootVotes, isSelected, isLast }) {
   return (
-    <div className={classNames(styles.choice, { isLast })}>
+    <div className={classNames(styles.choice, { isLast, isSelected })}>
       <span className={styles.choiceName}>
         {choice.choice}
       </span>

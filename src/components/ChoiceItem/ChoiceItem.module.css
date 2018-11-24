@@ -5,10 +5,15 @@
   border-top: 1px solid grey;
   border-left: 1px solid grey;
   border-right: 1px solid grey;
+  cursor: pointer;
 }
 
 .choice:global(.isLast) {
   border-bottom: 1px solid grey;
+}
+
+.choice:global(.isSelected) {
+  background: #eee;
 }
 
 .choiceName {

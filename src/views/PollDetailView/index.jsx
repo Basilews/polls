@@ -13,7 +13,8 @@ class PollDetailView extends Component {
     pollList: this.props.location && this.props.location.state
       ? this.props.location.state.pollList
       : null,
-    isSelected: false,
+    choiceId: null,
+    votedChoice: null,
   };
 
   componentDidMount() {
@@ -36,26 +37,34 @@ class PollDetailView extends Component {
       .catch(err => console.error(err));
   }
 
-  // handleSelect() {
-  //   this.setState(prevState => isSelected)
-  // }
+  handleSelect(e) {
+    const { poll } = this.state;
+    const { id } = e.currentTarget.dataset;
+    const newChoices = poll.choices.map((choice, index) => (
+      { ...choice, isSelected: index === parseInt(id, 10) ? true : false }
+    ));
+    poll.choices = newChoices;
+    this.setState({ poll, choiceId: parseInt(id, 10) });
+  }
 
-  // handleVote() {
-  //   const url = '';
+  handleVote() {
+    const questionId = this.props.match.params.id;
+    const { choiceId } = this.state;
+    const url = `https://polls.apiblueprint.org/questions/${questionId}/choices/${choiceId}`;
 
-  //   fetch(url)
-  //     .then(resp => {
-  //       resp.json()
-  //         .then(data => {
-  //           this.setState({ poll: data });
-  //         })
-  //         .catch(err => console.error(err));
-  //     })
-  //     .catch(err => console.error(err));
-  // }
+    fetch(url)
+      .then(resp => {
+        resp.json()
+          .then(data => {
+            this.setState({ votedChoice: data.choice })
+          })
+          .catch(err => console.error(err));
+      })
+      .catch(err => console.error(err));
+  }
 
   render() {
-    const { poll, pollList, isSelected } = this.state;
+    const { poll, pollList, choiceId, votedChoice } = this.state;
     const rootVotes = poll
       ? poll.choices.reduce((sum, val) => sum + val.votes, 0)
       : null;
@@ -72,19 +81,24 @@ class PollDetailView extends Component {
               <h2>Question: {poll.question}</h2>
               <ul>
                 {poll.choices.map((choice, index) => (
-                  <li key={`choice-${index}`} onClick={() => this.handleSelect()}>
+                  <li
+                    key={`choice-${index}`}
+                    data-id={index}
+                    onClick={e => this.handleSelect(e)}>
                     <ChoiceItem
                       choice={choice}
                       rootVotes={rootVotes}
+                      isSelected={choice.isSelected}
                       isLast={poll.choices.length - 1 === index} />
                   </li>
                 ))}
               </ul>
               <button
                 onClick={() => this.handleVote()}
-                disabled={!isSelected}>
+                disabled={!(choiceId >= 0)}>
                 Save Vote
               </button>
+              {votedChoice && <p>You've voted for {votedChoice}!</p>}
             </div>
           )
           : <p>Nothing found :(</p>
