@@ -1,0 +1,15 @@
+.pollList {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.pollListItem {
+  flex-grow: 1;
+  margin: 0 0 16px;
+}
+
+@media (min-width: 336px) {
+  .pollListItem {
+    margin-right: 16px;
+  }
+}
